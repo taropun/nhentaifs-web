@@ -1,17 +1,23 @@
-% rebase('base.html.tpl')
+% rebase('base.html.tpl', scripts=['/static/js/lazyload.js'])
 
 % include('search.html.tpl')
 
 <section class="galleries">
   % for row in galleries:
-    <div class="galleries__row">
+    <div class="lazyload galleries__row">
       % for gallery in row:
         <div class="galleries__row__col">
           <a class="galleries__row__col__thumb"
              href="/gallery/{{gallery['id']}}">
             <img class="galleries__row__col__thumb"
                  title="{{gallery['title']}}"
+                 data-src="/img/{{gallery['thumb']}}"
+                 src="/static/img/thumb_placeholder.gif" />
+            <noscript>
+            <img class="galleries__row__col__thumb"
+                 title="{{gallery['title']}}"
                  src="/img/{{gallery['thumb']}}" />
+            </noscript>
           </a>
           <span class="galleries__row__col__label">
             <a href="/gallery/{{gallery['id']}}">

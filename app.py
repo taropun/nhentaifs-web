@@ -79,7 +79,8 @@ def results_metadata(base):
             ID = fs_content('{}/{}/id', base, i)
         except FileNotFoundError:
             break
-        title = fs_content('{}/{}/title/pretty', base, i)
+        title = (fs_content('{}/{}/title/pretty', base, i) or
+                 fs_content('{}/{}/title/english', base, i))
         files = os.listdir(fs_path('{}/{}', base, i))
         thumb = ['{}/{}/{}'.format(base, i, f) for f in files
                  if f.startswith('thumb.')][0]
@@ -182,7 +183,7 @@ def related_metadata(gallery_id):
 @route('/gallery/<gallery_id:int>')
 def gallery(gallery_id):
     metadata = gallery_metadata(gallery_id)
-    title = metadata['title']['pretty']
+    title = metadata['title']['pretty'] or metadata['title']['english']
     filenames = ['/img/gallery/{}/thumbs/{}'.format(gallery_id, f)
                  for f in metadata['filenames']]
     thumbs = chunks(list(enumerate(filenames)), ROW_COUNT)
@@ -228,6 +229,6 @@ if __name__ == '__main__':
 # - [ ] highlight large galleries
 
 # JS:
-# - [ ] load thumbs as they scroll into view
+# - [X] load thumbs as they scroll into view
 # - [ ] preload gallery images relative to the current one
 # - [ ] bind keys in gallery viewer

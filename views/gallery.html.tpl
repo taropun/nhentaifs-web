@@ -1,4 +1,4 @@
-% rebase('base.html.tpl')
+% rebase('base.html.tpl', scripts=['/static/js/lazyload.js'])
 
 % include('search.html.tpl')
 
@@ -26,12 +26,17 @@
 
 <section class="galleries">
   % for row in thumbs:
-    <div class="galleries__row">
+    <div class="lazyload galleries__row">
       % for i, thumb in row:
         <div class="galleries__row__col">
           <a class="galleries__row__col__thumb"
              href="/gallery/{{metadata['id']}}/{{i + 1}}">
-            <img class="galleries__row__col__thumb" src="{{thumb}}" />
+            <img class="galleries__row__col__thumb"
+                 data-src="{{thumb}}"
+                 src="/static/img/thumb_placeholder.gif" />
+            <noscript>
+              <img class="galleries__row__col__thumb" src="{{thumb}}" />
+            </noscript>
           </a>
         </div>
       % end
@@ -46,7 +51,7 @@
       <div class="galleries__row__col">
         <a class="galleries__row__col__thumb"
            href="/gallery/{{gallery['id']}}">
-          <img class="galleries__row__col__thumb"
+          <img class="lazyload galleries__row__col__thumb"
                src="/img/{{gallery['cover']}}" />
         </a>
         <span class="galleries__row__col__label">

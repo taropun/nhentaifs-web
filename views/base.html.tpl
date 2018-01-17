@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html lang="en">
+<html class="no-js" lang="en">
   <head>
     <meta charset="utf-8">
     % if defined('title'):
@@ -8,6 +8,7 @@
     <title>nhentaifs</title>
     % end
     <link href="/static/css/style.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="/static/js/featuretest.js"></script>
   </head>
   <body>
     <main>

@@ -7,11 +7,11 @@
 <section class="page">
   % if nav['next']:
     <a href="{{base}}{{nav['next']}}">
-      <img src="{{page_url}}" />
+      <img class="page__image" src="{{page_url}}" />
     </a>
   % else:
     <a href="{{gallery_url}}">
-      <img src="{{page_url}}" />
+      <img class="page__image" src="{{page_url}}" />
     </a>
   % end
 </section>
