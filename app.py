@@ -56,10 +56,10 @@ def chunks(items, count):
 
 def make_nav(page, count):
     return {
-        'first': 1 if page > 1 else None,
+        'first': 1,
         'previous': page - 1 if page > 1 else None,
         'next': page + 1 if page < count else None,
-        'last': count if page < count else None,
+        'last': count,
         'window': window(page, NAVIGATION_SIZE, list(range(1, count + 1))),
         'current': page
     }
@@ -201,6 +201,7 @@ def gallery_page(gallery_id, page):
     if page < 1 or page > num_pages:
         abort(404)
     nav = make_nav(page, num_pages)
+    nav.pop('window')
     filenames = fs_content('{}/filenames', base).split('\n')
     page_url = '/img/gallery/{}/pages/{}'.format(gallery_id, filenames[index])
     base = '/gallery/{}/'.format(gallery_id)
