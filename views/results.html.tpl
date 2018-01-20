@@ -6,7 +6,7 @@
   % for row in galleries:
     <div class="lazyload galleries__row">
       % for gallery in row:
-        <div class="galleries__row__col">
+        <div class="galleries__row__col {{gallery['classes']}}">
           <a class="galleries__row__col__thumb"
              href="/gallery/{{gallery['id']}}">
             <img class="galleries__row__col__thumb"

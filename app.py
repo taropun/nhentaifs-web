@@ -12,6 +12,7 @@ STATIC_DIR = '{}/static'.format(SCRIPT_DIR)
 NAVIGATION_SIZE = 7
 PREFETCH_SIZE = 5
 ROW_COUNT = 5
+LARGE_GALLERY_SIZE = 100
 
 
 def fs_path(path, *args):
@@ -90,7 +91,15 @@ def results_metadata(base):
         files = os.listdir(fs_path('{}/{}', base, i))
         thumb = ['{}/{}/{}'.format(base, i, f) for f in files
                  if f.startswith('thumb.')][0]
-        galleries.append({'id': ID, 'title': title, 'thumb': thumb})
+        tags = {ID: fs_content('{}/{}/tags/{}', base, i, ID)
+                for ID in os.listdir(fs_path('{}/{}/tags', base, i))}
+        grouped_tags = group_tags(tags)
+        language = 'language--{}'.format(guess_language(grouped_tags))
+        num_pages = int(fs_content('{}/{}/num_pages', base, i))
+        is_large = num_pages >= LARGE_GALLERY_SIZE
+        classes = [language, 'gallery--large'] if is_large else [language]
+        galleries.append({'id': ID, 'title': title, 'thumb': thumb,
+                          'classes': ' '.join(classes)})
     return {'num_pages': num_pages, 'galleries': galleries}
 
 
@@ -142,8 +151,23 @@ def group_tags(tags):
         key, value = tag.split(':')
         if key not in result:
             result[key] = {}
-        result[key][ID] = value
+        result[key][value] = ID
     return result
+
+
+def guess_language(grouped_tags):
+    candidates = grouped_tags['language']
+    if 'translated' in candidates:
+        candidates.pop('translated')
+    languages = list(candidates.keys())
+    if 'english' in languages:
+        return 'english'
+    elif 'japanese' in languages:
+        return 'japanese'
+    elif 'chinese' in languages:
+        return 'chinese'
+    else:
+        return languages[0]
 
 
 def gallery_metadata(gallery_id):
@@ -175,12 +199,19 @@ def related_metadata(gallery_id):
         base = 'related/{}/{}'.format(gallery_id, directory)
         files = os.listdir(fs_path(base))
         ID = fs_content('{}/id', base, directory)
+        tags = {ID: fs_content('{}/tags/{}', base, ID)
+                for ID in os.listdir(fs_path('{}/tags', base))}
+        grouped_tags = group_tags(tags)
+        language = 'language--{}'.format(guess_language(grouped_tags))
+        num_pages = int(fs_content('{}/num_pages', base))
+        is_large = num_pages >= LARGE_GALLERY_SIZE
+        classes = [language, 'gallery--large'] if is_large else [language]
         gallery = {
             'id': ID,
             'title': fs_content('{}/title/pretty', base),
             'cover': ['gallery/{}/{}'.format(ID, f) for f in files
                       if f.startswith('cover.')][0],
-            'num_pages': fs_content('{}/num_pages', base)
+            'classes': ' '.join(classes)
         }
         galleries.append(gallery)
     return galleries
@@ -240,12 +271,9 @@ if __name__ == '__main__':
 
 # TODO:
 
-# app:
-# - [ ] settings page with strict cookies
-
 # CSS:
 # - [ ] make it dark
-# - [ ] highlight large galleries
+# - [X] highlight large galleries
 
 # JS:
 # - [X] load thumbs as they scroll into view

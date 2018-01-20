@@ -11,7 +11,7 @@
       % for key, tags in metadata['tags'].items():
         <div class="metadata__details__tags__tag">
           <span class="metadata__details__tags__tag__name">{{key}}</span>:
-          % for ID, value in tags.items():
+          % for value, ID in tags.items():
             <a href="/tagged/{{ID}}">{{value}}</a>
           % end
         </div>
@@ -48,7 +48,7 @@
   <h2>Related galleries</h2>
   <div class="galleries__row">
     % for gallery in related:
-      <div class="galleries__row__col">
+      <div class="galleries__row__col {{gallery['classes']}}">
         <a class="galleries__row__col__thumb"
            href="/gallery/{{gallery['id']}}">
           <img class="lazyload galleries__row__col__thumb"
