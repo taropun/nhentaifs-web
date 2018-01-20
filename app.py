@@ -10,6 +10,7 @@ from bottle import abort, redirect, request, route, run, static_file, template
 SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
 STATIC_DIR = '{}/static'.format(SCRIPT_DIR)
 NAVIGATION_SIZE = 7
+PREFETCH_SIZE = 5
 ROW_COUNT = 5
 
 
@@ -68,6 +69,11 @@ def make_nav(page, count):
 def fs_content(path, *args):
     with open(fs_path(path, *args), 'r') as f:
         return f.read()
+
+
+def fs_peek(path, *args):
+    with open(fs_path(path, *args), 'rb') as f:
+        f.read(1)
 
 
 def results_metadata(base):
@@ -210,6 +216,18 @@ def gallery_page(gallery_id, page):
                     nav=nav, page_url=page_url, gallery_url=gallery_url)
 
 
+@route('/gallery/<gallery_id:int>/<page:int>/prefetch')
+def gallery_page_prefetch(gallery_id, page):
+    base = 'gallery/{}'.format(gallery_id)
+    filenames = fs_content('{}/filenames', base).split('\n')
+    pages = window(page, PREFETCH_SIZE, filenames)
+    center = PREFETCH_SIZE // 2
+    pages.pop(center)
+    for page in pages:
+        fs_peek('{}/pages/{}', base, page)
+    return {'status': 0}
+
+
 if __name__ == '__main__':
     if len(sys.argv) != 2:
         print('Usage: {} <mountpoint>'.format(sys.argv[0]))
@@ -231,5 +249,5 @@ if __name__ == '__main__':
 
 # JS:
 # - [X] load thumbs as they scroll into view
-# - [ ] preload gallery images relative to the current one
-# - [ ] bind keys in gallery viewer
+# - [X] preload gallery images relative to the current one
+# - [X] bind keys in gallery viewer

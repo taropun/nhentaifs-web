@@ -86,7 +86,6 @@ main {
 
 .metadata__cover {
   display: flex;
-  flex: 1 0 auto;
   margin: auto 2.5em auto 0;
   height: 100%;
 }
@@ -94,6 +93,7 @@ main {
 .metadata__details {
   display: flex;
   flex-direction: column;
+  margin-left: auto;
 }
 
 .metadata__details__tags {
@@ -109,11 +109,13 @@ main {
   margin: 1rem 0;
 }
 
-.gallery__link {
+#gallery__link {
   text-align: center;
   margin-bottom: 0.5rem;
 }
 
-.page__image {
-  width: 100%;
+#page__image {
+  max-width: 100%;
+  display: flex;
+  margin: 0 auto;
 }
