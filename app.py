@@ -156,6 +156,8 @@ def group_tags(tags):
 
 
 def guess_language(grouped_tags):
+    if 'language' not in grouped_tags:
+        return 'unknown'
     candidates = grouped_tags['language']
     if 'translated' in candidates:
         candidates.pop('translated')
@@ -166,8 +168,10 @@ def guess_language(grouped_tags):
         return 'japanese'
     elif 'chinese' in languages:
         return 'chinese'
-    else:
+    elif len(languages) > 0:
         return languages[0]
+    else:
+        return 'unknown'
 
 
 def gallery_metadata(gallery_id):
