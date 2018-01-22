@@ -78,7 +78,6 @@ def fs_peek(path, *args):
 
 
 def results_metadata(base):
-    num_pages = int(fs_content('{}/num_pages', base))
     per_page = int(fs_content('{}/per_page', base))
     galleries = []
     for i in range(per_page):
@@ -100,6 +99,7 @@ def results_metadata(base):
         classes = [language, 'gallery--large'] if is_large else [language]
         galleries.append({'id': ID, 'title': title, 'thumb': thumb,
                           'classes': ' '.join(classes)})
+    num_pages = int(fs_content('{}/num_pages', base))
     return {'num_pages': num_pages, 'galleries': galleries}
 
 
